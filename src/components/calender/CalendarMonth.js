@@ -1,7 +1,6 @@
 import React from 'react';
 import moment from 'moment';
 
-import ReminderItem from './ReminderItem';
 import AddModal from './AddModal';
 import DeleteModal from './DeleteModal';
 
@@ -107,7 +106,7 @@ class CalendarMonth extends React.Component {
   }
 
   renderWeeks = (week, index) => {
-    const { month, actions } = this.props
+    const { month } = this.props
 
     // TODO: Clean this up and pop in to a list component
     return month.map((week, index) => (
@@ -123,16 +122,7 @@ class CalendarMonth extends React.Component {
 
             {this.priceEvent(weekday.date)}
             
-            {weekday.reminders.map((reminder) => (
-              <ReminderItem
-                key={reminder.uuid}
-                reminder={reminder}
-                weekIndex={week.index}
-                weekdayIndex={weekday.index}
-                editReminder={actions.editReminder}
-                deleteReminder={actions.deleteReminder}
-              />
-            ))}
+            
           </div>
         ))}
       </div>

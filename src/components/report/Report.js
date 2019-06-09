@@ -2,17 +2,7 @@ import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { fetchRecords } from '../../actions';
-const options = {
-  title: {
-    text: 'Stock price chart'
-  },
-  series: [{
-    data: [1, 2, 3]
-  }]  
-}
-// series: [{
-//   data: [1, 2, 3]
-// }]
+
 
 class Report extends React.Component {
   state = {
@@ -47,7 +37,6 @@ maxProfit = (prices) => {
   return maxProfit;
 }
   render() {
-    console.log(this.state.date)
     let dateSplit = null;
     if (this.state.date.length){
       dateSplit = this.state.date[0].split('-');

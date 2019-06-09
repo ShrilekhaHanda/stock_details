@@ -96,73 +96,7 @@ function calendarReducer (state = initialState, action) {
         year: updatedYearCalendar
       }
     }
-    case 'ADD_REMINDER': {
-      const updatedMonth = state.month.map((week, index) => {
-        if (action.payload.weekIndex === index) {
-          const dayToUpdate = week.days[action.payload.weekdayIndex]
-
-          dayToUpdate.reminders.push({
-            text: '',
-            date: moment(),
-            category: 'home',
-            open: true,
-            newReminder: true,
-            uuid: guid(),
-            parentDayUuid: week.days[action.payload.weekdayIndex].uuid,
-            grandparentUuid: week.uuid
-          })
-        }
-
-        return week
-      })
-
-      return {
-        ...state,
-        month: updatedMonth
-      }
-    }
-    case 'DELETE_REMINDER': {
-      const updatedMonth = state.month.map((week, index) => {
-        if (action.payload.weekIndex === index) {
-          const dayToUpdate = week.days[action.payload.weekdayIndex]
-          dayToUpdate.reminders = dayToUpdate.reminders.filter(reminder => reminder.uuid !== action.payload.reminder.uuid)
-        }
-
-        return week
-      })
-
-      return {
-        ...state,
-        month: updatedMonth
-      }
-    }
-    case 'EDIT_REMINDER': {
-      const updatedMonth = state.month.map((week, index) => {
-        if (action.payload.weekIndex !== index) {
-          return week
-        }
-
-        const dayToUpdate = week.days[action.payload.weekdayIndex]
-        dayToUpdate.reminders = dayToUpdate.reminders.map((reminder) => {
-          if (reminder.uuid !== action.payload.reminder.uuid) {
-            return reminder
-          }
-
-          return {
-            ...reminder,
-            ...action.payload.reminder,
-            updateTime: moment()
-          }
-        })
-
-        return week
-      })
-
-      return {
-        ...state,
-        month: updatedMonth
-      }
-    }
+    
     default:
       return state
   }
