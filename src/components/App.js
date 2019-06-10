@@ -33,7 +33,7 @@ class App extends React.Component {
           </div>
 
           <div className="col-4">
-            <Report stockPrice={this.state.stockPrice} stockDate={this.state.stockDate}/>
+            <Report allData={this.state.allData} stockPrice={this.state.stockPrice} stockDate={this.state.stockDate}/>
           </div>
         </div>
       </div>

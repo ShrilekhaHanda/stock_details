@@ -23,10 +23,6 @@ const AddModal = (props) => {
               <button type="submit" className="btn btn-primary">Add Price</button>
             </form>
           </div>
-          {/* <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-            
-          </div> */}
         </div>
       </div>
     </div>

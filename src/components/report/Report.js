@@ -1,7 +1,6 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-//import { fetchRecords } from '../../actions';
 
 
 class Report extends React.Component {
@@ -10,31 +9,45 @@ class Report extends React.Component {
     sellDate: "2019-06-05"
   }
 
-  maxProfit = (prices) => {
-    let minPrice = prices[0];
-    let maxProfit = prices[1] - prices[0];
+  getMaxProfit = (arr) => {
+  let minIdx = 0;
+  let maxIdx = 1;
+  let currMin = 0;
+  let maxProfit = 0;
 
-    for (let i = 1; i < prices.length; i++) {
-      let currentPrice = prices[i];
-      let potentialProfit = currentPrice - minPrice;
-      maxProfit = Math.max(maxProfit, potentialProfit);
-      minPrice = Math.min(minPrice, currentPrice);
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] < arr[currMin]) {
+      currMin = i;
     }
 
-    return maxProfit;
+    if (arr[maxIdx] - arr[minIdx] < arr[i] - arr[currMin]) {
+      maxIdx = i;
+      minIdx = currMin;
+    }
+
   }
+
+    maxProfit = (arr[maxIdx] - arr[minIdx]) * 10;
+    return maxProfit.toFixed(2);
+  }
+
   render() {
-    let { stockDate, stockPrice} = this.props;
-    let dateSplit = [];
+    let { stockDate, stockPrice, allData } = this.props;
+    let dateSplit = [], maxProArr = [];
     if (stockDate.length){
       dateSplit = stockDate[0].split('-');
+    } 
+    if (allData.length){
+      let array = this.props.allData.filter(item => ((new Date(item.fields.stock_date) >= new Date(this.state.buyDate)) && (new Date(item.fields.stock_date) <= new Date(this.state.sellDate))))
+    
+      maxProArr = array.map(item => (item.fields.stock_price))
     }
 
     return (
       <div className="mt-4"> 
         <div className="container">
           <p>Rs. 500</p>
-          <p>Max Profit: {this.maxProfit(stockPrice.reverse().slice(1, 10))}</p>
+          <p>Max Profit: {(maxProArr.length >= 2) ? this.getMaxProfit(maxProArr) : '0'}</p>
         </div>
 
         <div>
@@ -62,13 +75,21 @@ class Report extends React.Component {
         <div className="row mt-4 text-center">
 
           <div className="buy__date col-6 mt-3">
-              <input type="date" className="w-100" value={this.state.buyDate} onChange={e => this.setState({ buyDate: e.target.value })}/>
+              <input 
+                type="date" 
+                className="w-100" 
+                value={this.state.buyDate} 
+                onChange={e => this.setState({ buyDate: e.target.value })}/>
               <button className="btn btn-success mt-3">Buy date</button>
           </div>
 
 
           <div className="sell__date col-6 mt-3">            
-              <input type="date" className="w-100" value={this.state.sellDate} onChange={e => this.setState({ sellDate: e.target.value })}/>
+              <input 
+                type="date" 
+                className="w-100" 
+                value={this.state.sellDate} 
+                onChange={e => this.setState({ sellDate: e.target.value })}/>
               <button className="btn btn-success mt-3">Sell date</button>
           </div>
 

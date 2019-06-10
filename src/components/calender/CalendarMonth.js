@@ -1,12 +1,11 @@
 import React from 'react';
 import moment from 'moment';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 
 import AddModal from './AddModal';
 import DeleteModal from './DeleteModal';
 
-import { fetchRecords, addRecord, deleteRecord } from '../../actions';
+import { addRecord, deleteRecord } from '../../actions';
 import { prevMonth, nextMonth } from '../../actions';
 
 
@@ -46,7 +45,6 @@ class CalendarMonth extends React.Component {
   addClickHandler = async (e) => {
     const rate = e.target.elements.stockRate.value;
     e.preventDefault(); 
-    console.log(rate)
     this.modalCleanup('addModal');
 
     await addRecord(rate, this.state.stockDate)
@@ -68,9 +66,7 @@ class CalendarMonth extends React.Component {
   }
 
   priceEvent = (date) => {
-    const value = this.props.allData.filter(price => {
-      return (price.fields.stock_date === date.format('YYYY-MM-DD'))
-    })
+    const value = this.props.allData.filter(price => price.fields.stock_date === date.format('YYYY-MM-DD'))
     if(value.length){
       return <p className="stock__price text-center">
         {value[0].fields.stock_price} Rs.
