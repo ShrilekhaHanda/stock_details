@@ -1,26 +1,19 @@
 import React from 'react';
 import moment from 'moment';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux'
 
 import AddModal from './AddModal';
 import DeleteModal from './DeleteModal';
 
 import { fetchRecords, addRecord, deleteRecord } from '../../actions';
+import { prevMonth, nextMonth } from '../../actions';
 
 
 class CalendarMonth extends React.Component {
   state = {
-    prices: [],
     stockDate: null,
     stockId: null
-  }
-
-  componentDidMount() {
-    this.fetchRecords();
-  }
-
-  fetchRecords = async () => {
-    const data = await fetchRecords();
-    this.setState({ prices: data })
   }
 
   getDayClass = (day) => {
@@ -42,27 +35,29 @@ class CalendarMonth extends React.Component {
     return classes.join(' ')
   }
 
+  modalCleanup = (id) => {
+    document.getElementById(id).style.display = 'none';
+    let ele = document.getElementsByClassName('modal-backdrop');
+    for (var i = 0; i < ele.length; i++) {
+      ele[i].style.display = 'none';
+    }
+  }
 
   addClickHandler = async (e) => {
     const rate = e.target.elements.stockRate.value;
     e.preventDefault(); 
+    console.log(rate)
+    this.modalCleanup('addModal');
 
-    document.getElementsByClassName('modal-backdrop')[0].style.display = 'none';
-    document.getElementById('addModal').style.display = 'none';
-    //document.getElementById('addModal').modal('hide')
     await addRecord(rate, this.state.stockDate)
-    this.fetchRecords();
+    this.props.fetchRecords();
   }
 
   deleteRecord = async() => {
-    //document.getElementById('deleteModal').classList.remove('show');
-    //document.getElementsByClassName('modal-backdrop')[0].classList.remove('show');
-    document.getElementsByClassName('modal-backdrop')[0].style.display = 'none';
-    document.getElementById('deleteModal').style.display = 'none';
-    //document.getElementsByTagName('body')[0].classList.remove('modal-open');
+    this.modalCleanup('deleteModal');
 
     await deleteRecord(this.state.stockId)
-    this.fetchRecords();
+    this.props.fetchRecords();
   }
 
   deleteClickHandler = (e) => {
@@ -73,7 +68,7 @@ class CalendarMonth extends React.Component {
   }
 
   priceEvent = (date) => {
-    const value = this.state.prices.filter(price => {
+    const value = this.props.allData.filter(price => {
       return (price.fields.stock_date === date.format('YYYY-MM-DD'))
     })
     if(value.length){
@@ -108,7 +103,6 @@ class CalendarMonth extends React.Component {
   renderWeeks = (week, index) => {
     const { month } = this.props
 
-    // TODO: Clean this up and pop in to a list component
     return month.map((week, index) => (
       <div key={week.uuid} className='week'>
         {week.days.map((weekday, index) => (
@@ -120,8 +114,7 @@ class CalendarMonth extends React.Component {
               {weekday.date.format('D')}
             </p>
 
-            {this.priceEvent(weekday.date)}
-            
+            {this.priceEvent(weekday.date)}            
             
           </div>
         ))}
@@ -130,18 +123,20 @@ class CalendarMonth extends React.Component {
   }
 
   render () {
-    return this.state.prices.length ? (
+    return (
       <div className='calendar__month'>
         {this.renderWeeks()}
 
         <AddModal formSubmit={this.addClickHandler} stockDate={this.state.stockDate}/>
         <DeleteModal deleteRecord={this.deleteRecord}/>
     </div>
-    ) : null
+    ) 
   }
 }
 
-// CalendarMonth.propTypes = propTypes
 
-export default CalendarMonth
-// export default connect(null, null)(CalendarMonth)
+const mapStateToProps = state => ({
+  month: state.calendar.month
+})
+
+export default connect(mapStateToProps, { prevMonth, nextMonth })(CalendarMonth);

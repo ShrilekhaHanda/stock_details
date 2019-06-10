@@ -17,7 +17,7 @@ export const fetchRecords = () => {
 export const addRecord = (rate, date) => {
   return base('stock').create({
     "stock_name": "John Doe",
-    "stock_price": parseInt(rate),
+    "stock_price": parseFloat(rate),
     "stock_date": date
   });
 }
@@ -25,4 +25,3 @@ export const addRecord = (rate, date) => {
 export const deleteRecord = (id) => {  
   return base('stock').destroy(id);
 }
-

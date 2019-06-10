@@ -18,7 +18,7 @@ const AddModal = (props) => {
               </div>
               <div className="form-group">
                 <label htmlFor="add__price">Stock Price:</label>
-                <input type="number" className="form-control" id="add__price" placeholder="Ex: 500" name="stockRate" required/>
+                <input type="number" step="any" className="form-control" id="add__price" placeholder="Ex: 500" name="stockRate" required/>
               </div>
               <button type="submit" className="btn btn-primary">Add Price</button>
             </form>

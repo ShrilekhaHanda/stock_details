@@ -1,20 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import CalendarNavContainer from '../containers/CalendarNavContainer';
+
 import CalendarHeader from './CalendarHeader';
-import CalendarMonthContainer from '../containers/CalendarMonthContainer';
+import CalendarMonth from './CalendarMonth';
 
-
-class Calendar extends Component {
-  render () {
+const Calendar = ({ allData, fetchRecords }) => {  
     return (
       <div className='calendar'>
         <CalendarNavContainer />
         <CalendarHeader />
-        <CalendarMonthContainer />
+        <CalendarMonth allData={allData} fetchRecords={fetchRecords}/>
       </div>
     )
-  }
 }
 
 export default Calendar;

@@ -1,52 +1,40 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { fetchRecords } from '../../actions';
+//import { fetchRecords } from '../../actions';
 
 
 class Report extends React.Component {
   state = {
-    data: [],
-    date: [],
     buyDate: "2019-06-01",
     sellDate: "2019-06-05"
   }
 
-  componentDidMount() {
-    this.fetchRecords();
-  }
+  maxProfit = (prices) => {
+    let minPrice = prices[0];
+    let maxProfit = prices[1] - prices[0];
 
-  fetchRecords = async () => {
-    const res = await fetchRecords(); 
-    this.setState({ 
-      data: res.map(item => item.fields.stock_price), 
-      date: res.map(item => item.fields.stock_date) });  
-  }
-// O(n) time & O(1) space
-maxProfit = (prices) => {
-  let minPrice = prices[0];
-  let maxProfit = prices[1] - prices[0];
-
-  for (let i = 1; i < prices.length; i++) {
-    let currentPrice = prices[i];
-    let potentialProfit = currentPrice - minPrice;
-    maxProfit = Math.max(maxProfit, potentialProfit);
-    minPrice = Math.min(minPrice, currentPrice);
-  }
-
-  return maxProfit;
-}
-  render() {
-    let dateSplit = null;
-    if (this.state.date.length){
-      dateSplit = this.state.date[0].split('-');
+    for (let i = 1; i < prices.length; i++) {
+      let currentPrice = prices[i];
+      let potentialProfit = currentPrice - minPrice;
+      maxProfit = Math.max(maxProfit, potentialProfit);
+      minPrice = Math.min(minPrice, currentPrice);
     }
 
-    return this.state.data.length ? (
+    return maxProfit;
+  }
+  render() {
+    let { stockDate, stockPrice} = this.props;
+    let dateSplit = [];
+    if (stockDate.length){
+      dateSplit = stockDate[0].split('-');
+    }
+
+    return (
       <div className="mt-4"> 
         <div className="container">
           <p>Rs. 500</p>
-          <p>Max Profit: {this.maxProfit(this.state.data.reverse().slice(1, 10))}</p>
+          <p>Max Profit: {this.maxProfit(stockPrice.reverse().slice(1, 10))}</p>
         </div>
 
         <div>
@@ -63,7 +51,7 @@ maxProfit = (prices) => {
                 }
               },
               series: [{
-                data: this.state.data,
+                data: stockPrice,
                 pointStart: Date.UTC(dateSplit[0], dateSplit[1], dateSplit[2]),
                 pointInterval: 24 * 3600 * 1000
               }]
@@ -86,7 +74,7 @@ maxProfit = (prices) => {
 
         </div>
       </div>
-    ) : null;
+    )
   }
 }
 
