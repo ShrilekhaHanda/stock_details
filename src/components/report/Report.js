@@ -46,7 +46,7 @@ class Report extends React.Component {
     return (
       <div className="mt-4"> 
         <div className="container">
-          <p>Rs. 500</p>
+          <p>Rs. {maxProArr[0]}</p>
           <p>Max Profit: {(maxProArr.length >= 2) ? this.getMaxProfit(maxProArr) : '0'}</p>
         </div>
 
